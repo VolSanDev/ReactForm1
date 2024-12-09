@@ -1,0 +1,143 @@
+
+:root {
+    --lightPurple: #8456e5;
+    --customTextColor: #1c0a44;
+}
+
+body {
+    font-family: 'Raleway', sans-serif;
+    font-weight: 100;
+}
+
+@media (min-width: 200px) {
+    .main {
+        width: 90vw;
+    }
+}
+
+@media (min-width: 1000px) {
+    .main {
+        width: 40vw;
+    }
+}
+
+.headerDiv {
+    display: flex;
+    justify-content: start;
+    font-size: 125%;
+}
+
+.formControl:active {
+    border: 3px solid mediumpurple;
+}
+
+.formLabel {
+    opacity: 0.7;
+}
+
+.formControl {
+    border-radius: 0.3rem;
+}
+
+.customColor {
+    color: var(--customTextColor);
+}
+
+.rangeTopLabels {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0;
+}
+
+.rangeTopLabel {
+    font-size: 80%;
+}
+
+.submitButton {
+    width: 100%;
+    background-color: var(--lightPurple);
+    color: #ffffff;
+    padding: 0.5rem;
+    border: none;
+    border-radius: 10px;
+}
+
+.submitButton:disabled {
+    opacity: 0.5;
+}
+
+/**/
+
+input[type="range"] {
+    -webkit-appearance: none; /* Remove default styling */
+    width: 100%; /* Full width */
+    background: transparent; /* Transparent background */
+}
+
+input[type="range"]:focus {
+    outline: none; /* Remove focus outline */
+}
+
+input[type="range"]::-webkit-slider-runnable-track {
+    width: 100%;
+    height: 4px; /* Height of the track */
+    cursor: pointer;
+    background: var(--lightPurple); /* Color of the track */
+    border-radius: 2px; /* Rounded corners */
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    height: 16px; /* Height of the thumb */
+    width: 16px; /* Width of the thumb */
+    border-radius: 50%; /* Make the thumb circular */
+    background: var(--lightPurple); /* Color of the thumb */
+    cursor: pointer;
+    margin-top: -6px; /* Center the thumb on the track */
+}
+
+input[type="range"]::-moz-range-track {
+    width: 100%;
+    height: 4px;
+    cursor: pointer;
+    background: #000;
+    border-radius: 2px;
+}
+
+input[type="range"]::-moz-range-thumb {
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
+    background: #000;
+    cursor: pointer;
+}
+
+input[type="range"]::-ms-track {
+    width: 100%;
+    height: 4px;
+    cursor: pointer;
+    background: transparent;
+    border-color: transparent;
+    color: transparent;
+}
+
+input[type="range"]::-ms-thumb {
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
+    background: #000;
+    cursor: pointer;
+}
+
+.errorMessage {
+    font-size: 80%;
+    color: var(--customTextColor);
+    text-align: left;
+    padding-left: 3px;
+    opacity: 0.8;
+    font-weight: 300;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

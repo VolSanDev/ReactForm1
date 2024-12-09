@@ -1,0 +1,21 @@
+:root {
+
+}
+
+
+
+body {
+  margin: 0;
+  display: flex;
+  place-items: center;
+  align-items: first baseline;
+  min-width: 320px;
+  min-height: 100vh;
+  background-color: #f9edff;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
