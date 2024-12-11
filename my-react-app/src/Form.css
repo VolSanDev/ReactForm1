@@ -75,6 +75,8 @@ body {
 
 .formControl {
     border-radius: 0.3rem;
+    border-color: #c5b8e4;
+    border-width: 0.00000000000001rem;
 }
 
 .customColor {
@@ -89,6 +91,7 @@ body {
 
 .rangeTopLabel {
     font-size: 80%;
+    color: var(--customTextColor)
 }
 
 .photoControl {
@@ -115,67 +118,28 @@ body {
 /**/
 
 input[type="range"] {
-    -webkit-appearance: none; /* Remove default styling */
-    width: 100%; /* Full width */
-    background: transparent; /* Transparent background */
-}
-
-input[type="range"]:focus {
-    outline: none; /* Remove focus outline */
-}
-
-input[type="range"]::-webkit-slider-runnable-track {
+    -webkit-appearance: none;
     width: 100%;
-    height: 4px; /* Height of the track */
-    cursor: pointer;
-    background: var(--lightPurple); /* Color of the track */
-    border-radius: 2px; /* Rounded corners */
+    background: rgba(200, 182, 241, 0.8);
+    height: 0.3vh;
+    border-radius: 4px;
+    outline: none;
+    border: none;
 }
 
 input[type="range"]::-webkit-slider-thumb {
     -webkit-appearance: none;
-    height: 16px; /* Height of the thumb */
-    width: 16px; /* Width of the thumb */
-    border-radius: 50%; /* Make the thumb circular */
-    background: var(--lightPurple); /* Color of the thumb */
-    cursor: pointer;
-    margin-top: -6px; /* Center the thumb on the track */
-}
-
-input[type="range"]::-moz-range-track {
-    width: 100%;
-    height: 4px;
-    cursor: pointer;
-    background: #000;
-    border-radius: 2px;
-}
-
-input[type="range"]::-moz-range-thumb {
-    height: 16px;
-    width: 16px;
+    color: #6d3be3;
+    height: 15px;
+    width: 15px;
+    background: var(--lightPurple);
     border-radius: 50%;
-    background: #000;
     cursor: pointer;
 }
 
-input[type="range"]::-ms-track {
-    width: 100%;
-    height: 4px;
-    cursor: pointer;
-    background: transparent;
-    border-color: transparent;
-    color: transparent;
+input[type="range"]::-moz-range-progress {
+    background: var(--customTextColor)!important;
 }
-
-input[type="range"]::-ms-thumb {
-    height: 16px;
-    width: 16px;
-    border-radius: 50%;
-    background: #000;
-    cursor: pointer;
-}
-
-
 
 .errorMessage {
     font-size: 80%;
@@ -190,6 +154,39 @@ input[type="range"]::-ms-thumb {
     background-color: rgba(239, 50, 50, 0.1);
     border: 2px solid #f92c2c;
 }
+
+.rangeInput .sliderValue {
+    position: relative;
+    width: 100%;
+}
+
+.rangeInput .sliderValue span {
+    position: absolute;
+    height: 45px;
+    width: 45px;
+    color: var(--lightPurple);
+    font-size: 90%;
+    top: -40px;
+    transform: translateX(-50%);
+    line-height: 55px;
+    z-index: 2;
+}
+
+.rangeInput .sliderValue span:after {
+    position: absolute;
+    content: "";
+    height: 45px;
+    width: 45px;
+    background: #ffffff;
+    left: 50%;
+    transform: translateX(-50%) ;
+    border: 0.001rem solid #c5b8e4;
+    z-index: -1;
+    border-top-left-radius: 50%;
+    border-top-right-radius: 50%;
+    /*border-bottom-left-radius: 50%;*/
+}
+
 
 @tailwind base;
 @tailwind components;

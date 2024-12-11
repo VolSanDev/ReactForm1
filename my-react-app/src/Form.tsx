@@ -363,7 +363,7 @@ function Form() {
                             {emailControlRegexInvalid() &&
                                 <p className={'errorMessage'}> {formValidators.email.regex.errorMessage} </p>}
                         </div>
-                        <div className="mb-5 controlDiv">
+                        <div className="mb-5 rangeInput">
                             <label className="customColor formLabel block text-black-500 text-sm text-left"
                                    htmlFor="age">
                                 Age
@@ -373,13 +373,13 @@ function Form() {
                                 <div className={'rangeTopLabel'}>100</div>
                             </div>
                             <input
-                                className="formControl"
                                 type="range"
                                 id="age"
                                 onChange={(e) => onAge(e.target.value)}
                                 min={minAge}
                                 max={maxAge}
                                 step={ageInputStep}
+                                value={age !== -1 ? age : minAge}
                             />
                             { ageControlInvalid() && <p className={'errorMessage'}> {formValidators.age.required.errorMessage} </p>}
                         </div>

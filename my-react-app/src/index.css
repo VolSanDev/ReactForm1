@@ -11,7 +11,7 @@ body {
   align-items: first baseline;
   min-width: 320px;
   min-height: 100vh;
-  background-color: #f9edff;
+  background-color: #f7effe;
 }
 
 @tailwind base;
