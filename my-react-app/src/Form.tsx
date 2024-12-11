@@ -5,7 +5,7 @@ import { FormValidators } from "./models/formValidators.ts";
 import { FormControlState } from "./models/formControlState.ts";
 import { InputType } from "./models/inputType.ts";
 
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import { Holiday } from "./models/holiday.ts";
 
 const minAge = 8;
@@ -18,7 +18,7 @@ function Form() {
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [email, setEmail] = useState('');
-    const [age, setAge] = useState(8);
+    const [age, setAge] = useState(-1);
     const [photo, setPhoto] = useState('');
     const [workoutDate, setWorkoutDate] = useState('');
 
@@ -97,8 +97,10 @@ function Form() {
             .catch(error => {
                 console.log("error while retrieving holidays: ", error);
             })
-            .then(response => {
-                holidays = response;
+            .then((response: void | AxiosResponse<Holiday[]>) => {
+                if (response && response.data) {
+                    holidays = response.data;
+                }
             });
     });
 
@@ -128,13 +130,11 @@ function Form() {
    }
 
     function onAge(value: string): void {
-       console.log("onAge: ", value);
        performValidationLogic(InputType.Age, value);
     }
 
     function listenToResize(): void {
        window.addEventListener('resize', () => {
-           console.log("window width: ", window.innerWidth);
            setIsMobile(window.innerWidth <= 1000);
        });
     }
@@ -196,8 +196,13 @@ function Form() {
                 break;
             }
             case InputType.Age:
+            {
+                let newObject = {...formValidators};
+                newObject.age.required.valid = true;
+                newObject.age.required.state = FormControlState.Touched;
                 setAge(parseInt(value));
                 break;
+            }
             case InputType.Photo:
             {
                 let newObject = {...formValidators};
@@ -229,10 +234,14 @@ function Form() {
                     newObject.workoutDate.required.valid = false;
                     newObject.workoutDate.required.state = FormControlState.Touched;
                 }
+
+                if (!(formValidators.age.required.state === FormControlState.Touched)) {
+                    formValidators.age.required.state = FormControlState.Touched;
+                }
+
                 break;
             }
 
-             // perform validation
      }
 
      verifyFormDisabled();
@@ -295,12 +304,15 @@ function Form() {
             && formValidators.email.regex.state === FormControlState.Touched;
     }
 
+    function ageControlInvalid(): boolean {
+       return !formValidators.age.required.valid
+             && formValidators.age.required.state === FormControlState.Touched;
+    }
+
     function photoControlInvalid(): boolean {
         return !formValidators.photo.required.valid
             && formValidators.photo.required.state === FormControlState.Touched;
     }
-
-
 
     return (
         <>
@@ -368,9 +380,8 @@ function Form() {
                                 min={minAge}
                                 max={maxAge}
                                 step={ageInputStep}
-                                value={age}
                             />
-
+                            { ageControlInvalid() && <p className={'errorMessage'}> {formValidators.age.required.errorMessage} </p>}
                         </div>
                         <div className="mb-5 controlDiv">
                             <label className="customColor formLabel block text-black-500 text-sm text-left"
