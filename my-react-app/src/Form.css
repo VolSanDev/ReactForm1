@@ -1,6 +1,7 @@
 
 :root {
     --lightPurple: #8456e5;
+    --lightPurpleHover: #6d3be3;
     --customTextColor: #1c0a44;
 }
 
@@ -25,6 +26,43 @@ body {
     display: flex;
     justify-content: start;
     font-size: 125%;
+}
+
+.headerDiv:first-child {
+    margin-top: 3rem;
+}
+
+.headerDiv2 {
+    margin-top: 3rem;
+}
+
+.photoDiv {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 10vh;
+    background-color: #ffffff;
+}
+
+.photoMessage {
+    font-size: 90%;
+    color: var(--lightPurple);
+    font-weight: 300;
+}
+
+.photoMessage1 {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.photoMessage2 {
+    opacity: 0.7;
+    color: #626262;
+}
+
+.photoMessagePresent {
+    color: var(--customTextColor);
 }
 
 .formControl:active {
@@ -53,6 +91,10 @@ body {
     font-size: 80%;
 }
 
+.photoControl {
+    display: none;
+}
+
 .submitButton {
     width: 100%;
     background-color: var(--lightPurple);
@@ -60,6 +102,10 @@ body {
     padding: 0.5rem;
     border: none;
     border-radius: 10px;
+}
+
+.submitButton:hover {
+    background-color: var(--lightPurpleHover);
 }
 
 .submitButton:disabled {
@@ -129,6 +175,8 @@ input[type="range"]::-ms-thumb {
     cursor: pointer;
 }
 
+
+
 .errorMessage {
     font-size: 80%;
     color: var(--customTextColor);
@@ -136,6 +184,11 @@ input[type="range"]::-ms-thumb {
     padding-left: 3px;
     opacity: 0.8;
     font-weight: 300;
+}
+
+.errorControl {
+    background-color: rgba(239, 50, 50, 0.1);
+    border: 2px solid #f92c2c;
 }
 
 @tailwind base;
