@@ -131,7 +131,7 @@ function Form() {
                     holidays = response.data;
                 }
             });
-    });
+    }, []);
 
    function onFirstName(value: string): void {
        performValidationLogic(InputType.FirstName, value);
@@ -151,7 +151,6 @@ function Form() {
        } else {
            performValidationLogic(InputType.Photo, '');
        }
-      // performValidationLogic(InputType.Photo, value);
     }
 
     function onWorkoutDate(value: string): void {
