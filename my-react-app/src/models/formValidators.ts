@@ -7,4 +7,5 @@ export interface FormValidators {
     age: FormValidator;
     photo: FormValidator;
     workoutDate: FormValidator;
+    workoutTime: FormValidator;
 }

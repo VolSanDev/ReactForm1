@@ -1,4 +1,3 @@
-
 :root {
     --lightPurple: #8456e5;
     --lightPurpleHover: #6d3be3;
@@ -116,8 +115,6 @@ body {
     opacity: 0.5;
 }
 
-/**/
-
 input[type="range"] {
     -webkit-appearance: none;
     width: 100%;
@@ -185,7 +182,6 @@ input[type="range"]::-moz-range-progress {
     z-index: -1;
     border-top-left-radius: 50%;
     border-top-right-radius: 50%;
-    /*border-bottom-left-radius: 50%;*/
 }
 
 .dateCalendar {
@@ -195,14 +191,67 @@ input[type="range"]::-moz-range-progress {
 }
 
 .dateCalendarWeb {
-    width: 70%!important;
+    width: 120%!important;
 }
 
 .dateCalendarMobile {
     width: 100%!important;
 }
 
+.dateEventInfoP {
+    font-size: 90%;
+    text-align: left;
+}
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+.datesSubContainerWeb {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+}
+
+.datesSubContainerMobile {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+}
+
+.timesContainer {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.timesContainerMobile {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    flex-direction: column;
+}
+
+.timeDiv, .timeDivMobile {
+    display: block;
+    padding: 5px;
+    border: 0.001rem solid var(--inputBorderColor);
+    border-radius: 8px;
+    background-color: #fff;
+    cursor: pointer;
+}
+
+.timeDiv {
+    width: 100%;
+}
+
+.timeDivMobile {
+    width: 17%;
+}
+
+
+.timeDivSelected{
+    border: 2px solid mediumpurple;
+}
+
+.timesSubContainerMobile {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+}

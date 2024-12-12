@@ -5,4 +5,5 @@ export enum InputType {
     Age = 4,
     Photo = 5,
     WorkoutDate = 6,
+    WorkoutTime = 7,
 }

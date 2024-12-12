@@ -1,20 +1,30 @@
-
 import './Form.css';
+
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
+
+import axios, { AxiosResponse } from 'axios';
+
+import CloseIcon from '@mui/icons-material/Close';
+import InfoIcon from '@mui/icons-material/Info';
+import { Slider } from "@mui/material";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { DateCalendar, LocalizationProvider } from "@mui/x-date-pickers";
+
 import { FormValidators } from "./models/formValidators.ts";
 import { FormControlState } from "./models/formControlState.ts";
 import { InputType } from "./models/inputType.ts";
-
-import axios, { AxiosResponse } from 'axios';
 import { Holiday } from "./models/holiday.ts";
-import { DateCalendar, LocalizationProvider } from "@mui/x-date-pickers";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { Slider } from "@mui/material";
+import { HolidayType } from "./models/holidayType.ts";
+import { InfoAboutEvent } from "./models/infoAboutEvent.ts";
+
+import { format } from "date-fns";
+
 
 const minAge = 8;
 const maxAge = 100;
 const ageInputStep = 1;
 const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+const workoutTimes = ['12:00', '14:00', '16:30', '18:30', '20:00'];
 
 function Form() {
 
@@ -24,10 +34,18 @@ function Form() {
     const [age, setAge] = useState(-1);
     const [photo, setPhoto] = useState('');
     const [workoutDate, setWorkoutDate] = useState('');
+    const [workoutTime, setWorkoutTime] = useState('');
 
     const [isMobile, setIsMobile] = useState(window.innerWidth <= 1000);
 
     const [formDisabled, setFormDisabled] = useState(true);
+
+    const [infoAboutEvent, setInfoAboutEvent] = useState({
+        shouldDisplay: false,
+        message: '',
+    } as InfoAboutEvent);
+
+    const [showWorkoutTimes, setShowWorkoutTimes] = useState(false);
 
     const [formValidators, setFormValidators]: FormValidators = useState({
         firstName: {
@@ -81,8 +99,16 @@ function Form() {
                 name: 'required',
                 valid: false,
                 state: FormControlState.Clean,
-                errorMessage: 'This field is required',
+                errorMessage: 'Workout date is required',
             },
+        },
+        workoutTime: {
+           required: {
+               name: 'required',
+               valid: false,
+               state: FormControlState.Clean,
+               errorMessage: 'Workout time is required'
+           }
         }
     } as FormValidators);
 
@@ -119,7 +145,7 @@ function Form() {
         performValidationLogic(InputType.Email, value);
     }
 
-    function onPhoto(value: ChangeEvent<HTMLInputElement>): void {
+    function onPhoto(value: ChangeEvent<HTMLInputElement> | null): void {
        if (value && value.target && value.target.files && value.target.files[0].name) {
            performValidationLogic(InputType.Photo, value.target.files[0].name);
        } else {
@@ -134,6 +160,10 @@ function Form() {
 
     function onAge(value: string): void {
        performValidationLogic(InputType.Age, value);
+    }
+
+    function onWorkoutTime(value: string): void {
+       performValidationLogic(InputType.WorkoutTime, value);
     }
 
     function listenToResize(): void {
@@ -195,7 +225,6 @@ function Form() {
                     newObject.email.regex.state = FormControlState.Clean;
                 }
                 setFormValidators(newObject);
-                console.log("email validators after setting: ", formValidators.email)
                 break;
             }
             case InputType.Age:
@@ -227,7 +256,7 @@ function Form() {
             }
             case InputType.WorkoutDate: {
                 let newObject = {...formValidators};
-                console.log("date value: ", new Date(value));
+                value = format(new Date(value), 'yyyy-MM-dd');
                 if (value && value.length > 0) {
                     setWorkoutDate(value);
 
@@ -242,12 +271,36 @@ function Form() {
                     formValidators.age.required.state = FormControlState.Touched;
                 }
 
+                verifyWorkoutDate(value);
+                break;
+            }
+            case InputType.WorkoutTime: {
+                let newObject = {...formValidators};
+                newObject.workoutTime.required.valid = true;
+                setWorkoutTime(value);
                 break;
             }
 
      }
 
      verifyFormDisabled();
+    }
+
+    function verifyWorkoutDate(input: string): void {
+       const found = holidays.find(holiday => holiday.date === input && holiday.type === HolidayType.Observance);
+         if (found) {
+              setInfoAboutEvent({
+                shouldDisplay: true,
+                message: found.name
+              });
+              setShowWorkoutTimes(false);
+         } else {
+              setInfoAboutEvent({
+                shouldDisplay: false,
+                message: ''
+              });
+             setShowWorkoutTimes(true);
+         }
     }
 
     function submitForm(e: FormEvent<HTMLFormElement>): void {
@@ -280,6 +333,7 @@ function Form() {
               && formValidators.age.required.valid
               && formValidators.photo.required.valid
               && formValidators.workoutDate.required.valid
+              && formValidators.workoutTime.required.valid
          ) {
               setFormDisabled(false);
          } else {
@@ -315,6 +369,16 @@ function Form() {
     function photoControlInvalid(): boolean {
         return !formValidators.photo.required.valid
             && formValidators.photo.required.state === FormControlState.Touched;
+    }
+
+    function workoutDateInvalid(): boolean {
+        return !formValidators.workoutDate.required.valid
+            && formValidators.workoutDate.required.state === FormControlState.Touched;
+    }
+
+    function workoutTimeInvalid(): boolean {
+        return !formValidators.workoutTime.required.valid
+            && formValidators.workoutTime.required.state === FormControlState.Touched;
     }
 
     return (
@@ -390,6 +454,10 @@ function Form() {
                                width: '15px',
                                height: '15px',
                            },
+                           '& .MuiSlider-valueLabel': {
+                               background: '#fff',
+                               color: '#6d3be3',
+                           }
                        }}
                        onChange={(e, value) => onAge(value.toString())}
                        ></Slider>
@@ -403,10 +471,20 @@ function Form() {
                             <div>
                                 <div>
                                     <div className={'photoDiv formControl shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'}
-                                    onClick={() => document.getElementById('photo')?.click()}
                                     >
-                                        { !(photo && photo.length > 0) && <p className={'photoMessage'}> <a className={'photoMessage1'}>Upload a file</a> { !isMobile && <span className={'photoMessage2'}>or drag and drop here</span> }</p> }
-                                        { (photo && photo.length > 0) && <p className={'photoMessagePresent'}> {photo} </p> }
+                                        { !(photo && photo.length > 0) && <p className={'photoMessage'} onClick={() => document.getElementById('photo')?.click()}> <a className={'photoMessage1'}>Upload a file</a> { !isMobile && <span className={'photoMessage2'}>or drag and drop here</span> }</p> }
+                                        { (photo && photo.length > 0) && <p className={'photoMessagePresent'}> {photo} <CloseIcon sx={{
+                                            cursor: 'pointer',
+                                            background: '#020950',
+                                            color: '#fff',
+                                            borderRadius: '50%',
+                                            fontSize: '120%',
+                                            '&:hover': {
+                                                background: '#ff0000',
+                                            }
+                                        }}
+                                        onClick={() => onPhoto(null)}
+                                        ></CloseIcon> </p> }
                                     </div>
                                     {photoControlInvalid() &&
                                         <p className={'errorMessage'}> {formValidators.photo.required.errorMessage} </p>}
@@ -423,8 +501,9 @@ function Form() {
                     <div className={"headerDiv2 headerDiv mb-3 customColor"}>
                         <h1 className={"customColor mt-5 "}>Your workout</h1>
                     </div>
-                    <div className="form-group">
-                        <div className="mb-5">
+                    <div className="mb-5">
+                            <div className={`${!isMobile ? 'datesSubContainerWeb' : 'datesSubContainerMobile'}`}>
+                            <div>
                             <label className="customColor formLabel block text-black-500 text-sm text-left"
                                    htmlFor="date">
                                Date
@@ -435,7 +514,43 @@ function Form() {
                                 onChange={(date) => onWorkoutDate(date.toString())}
                                 ></DateCalendar>
                             </LocalizationProvider>
-                        </div>
+                            </div>
+                                { showWorkoutTimes &&
+                                <div className={`${!isMobile ? 'timesContainer' : 'timesContainerMobile mt-2'}`}>
+                                    <div>
+                                    <label className="customColor formLabel block text-black-500 text-sm text-left"
+                                           htmlFor="date">
+                                        Time
+                                    </label>
+                                        <div className={`mb-5 ${isMobile && 'timesSubContainerMobile'}`}
+                                        >
+                                    {
+                                        workoutTimes.map((time, index) => {
+                                            return (
+                                                <div
+                                                    key={index}
+                                                    className={` ${!isMobile ? 'mb-5 timeDiv' : 'timeDivMobile'} ${workoutTime === time ? 'timeDivSelected' : ''}`}
+                                                onClick={() => {onWorkoutTime(time)}}
+                                                >
+                                                    <p>{time}</p>
+                                                </div>
+                                            )
+                                        })
+                                    }
+                                        </div>
+                                    </div>
+                                </div>
+                                }
+                            </div>
+                            {infoAboutEvent.shouldDisplay && <p className={'dateEventInfoP mb-3'}><InfoIcon
+                                sx={{
+                                color: '#9674e3'
+                            }}
+                            ></InfoIcon>{ `It's  ${infoAboutEvent.message}`} </p>}
+                        {workoutDateInvalid() &&
+                            <p className={'errorMessage'}> {formValidators.workoutDate.required.errorMessage} </p>}
+                        {workoutTimeInvalid() &&
+                            <p className={'errorMessage'}> {formValidators.workoutTime.required.errorMessage} </p>}
                     </div>
                         <button type="submit" className={"submitButton"}
                                 disabled={formDisabled}
