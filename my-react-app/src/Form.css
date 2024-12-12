@@ -3,6 +3,7 @@
     --lightPurple: #8456e5;
     --lightPurpleHover: #6d3be3;
     --customTextColor: #1c0a44;
+    --inputBorderColor: #c5b8e4;
 }
 
 body {
@@ -75,7 +76,7 @@ body {
 
 .formControl {
     border-radius: 0.3rem;
-    border-color: #c5b8e4;
+    border-color: var(--inputBorderColor);
     border-width: 0.00000000000001rem;
 }
 
@@ -185,6 +186,20 @@ input[type="range"]::-moz-range-progress {
     border-top-left-radius: 50%;
     border-top-right-radius: 50%;
     /*border-bottom-left-radius: 50%;*/
+}
+
+.dateCalendar {
+    background-color: #fff;
+    border-radius: 10px;
+    border: 0.1rem solid var(--inputBorderColor);
+}
+
+.dateCalendarWeb {
+    width: 70%!important;
+}
+
+.dateCalendarMobile {
+    width: 100%!important;
 }
 
 

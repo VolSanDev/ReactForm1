@@ -7,6 +7,9 @@ import { InputType } from "./models/inputType.ts";
 
 import axios, { AxiosResponse } from 'axios';
 import { Holiday } from "./models/holiday.ts";
+import { DateCalendar, LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { Slider } from "@mui/material";
 
 const minAge = 8;
 const maxAge = 100;
@@ -224,7 +227,7 @@ function Form() {
             }
             case InputType.WorkoutDate: {
                 let newObject = {...formValidators};
-                console.log("date value: ", value);
+                console.log("date value: ", new Date(value));
                 if (value && value.length > 0) {
                     setWorkoutDate(value);
 
@@ -372,15 +375,24 @@ function Form() {
                                 <div className={'rangeTopLabel'}>8</div>
                                 <div className={'rangeTopLabel'}>100</div>
                             </div>
-                            <input
-                                type="range"
-                                id="age"
-                                onChange={(e) => onAge(e.target.value)}
-                                min={minAge}
-                                max={maxAge}
-                                step={ageInputStep}
-                                value={age !== -1 ? age : minAge}
-                            />
+                       <Slider
+                       size={'small'}
+                       step={ageInputStep}
+                       valueLabelDisplay={'auto'}
+                       defaultValue={minAge}
+                       max={maxAge}
+                       min={minAge}
+                       sx={{
+                           width: '98.8%',
+                           height: '3px',
+                           color: '#8456e5',
+                           '& .MuiSlider-thumb': {
+                               width: '15px',
+                               height: '15px',
+                           },
+                       }}
+                       onChange={(e, value) => onAge(value.toString())}
+                       ></Slider>
                             { ageControlInvalid() && <p className={'errorMessage'}> {formValidators.age.required.errorMessage} </p>}
                         </div>
                         <div className="mb-5 controlDiv">
@@ -412,16 +424,17 @@ function Form() {
                         <h1 className={"customColor mt-5 "}>Your workout</h1>
                     </div>
                     <div className="form-group">
-                        <div className="mb-5 controlDiv">
+                        <div className="mb-5">
                             <label className="customColor formLabel block text-black-500 text-sm text-left"
                                    htmlFor="date">
                                Date
                             </label>
-                            <input
-                                className={`formControl shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
-                                id="date" type="date"
-                                onChange={(e) => onWorkoutDate(e.target.value)}
-                            />
+                            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                <DateCalendar
+                                className={`dateCalendar  ${isMobile ? 'dateCalendarMobile' : 'dateCalendarWeb'}`}
+                                onChange={(date) => onWorkoutDate(date.toString())}
+                                ></DateCalendar>
+                            </LocalizationProvider>
                         </div>
                     </div>
                         <button type="submit" className={"submitButton"}
