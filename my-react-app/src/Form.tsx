@@ -18,6 +18,7 @@ import { HolidayType } from "./models/holidayType.ts";
 import { InfoAboutEvent } from "./models/infoAboutEvent.ts";
 
 import { format } from "date-fns";
+import { Dayjs } from "dayjs";
 
 
 const minAge = 8;
@@ -380,6 +381,23 @@ function Form() {
             && formValidators.workoutTime.required.state === FormControlState.Touched;
     }
 
+    function handleShouldDisableDate(value: Dayjs): boolean {
+       let day = value.day();
+
+       if (day === 6) {
+           return true;
+       }
+
+       let date = format(value.toDate(), 'yyyy-MM-dd');
+       const found = holidays.find(holiday => holiday.date === date  && holiday.type === HolidayType.National_Holiday);
+
+       if (found) {
+           return true;
+       }
+
+       return false;
+    }
+
     return (
         <>
             <form onSubmit={e => submitForm(e)}>
@@ -511,6 +529,7 @@ function Form() {
                                 <DateCalendar
                                 className={`dateCalendar  ${isMobile ? 'dateCalendarMobile' : 'dateCalendarWeb'}`}
                                 onChange={(date) => onWorkoutDate(date.toString())}
+                                shouldDisableDate={(date): boolean => { return handleShouldDisableDate(date) }}
                                 ></DateCalendar>
                             </LocalizationProvider>
                             </div>
