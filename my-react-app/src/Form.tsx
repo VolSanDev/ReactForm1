@@ -113,7 +113,7 @@ function Form() {
         }
     } as FormValidators);
 
-    let holidays: Holiday[] = [];
+    const [holidays, setHolidays] = useState([] as Holiday[]);
 
     useEffect(() => {
 
@@ -128,8 +128,8 @@ function Form() {
                 console.log("error while retrieving holidays: ", error);
             })
             .then((response: void | AxiosResponse<Holiday[]>) => {
-                if (response && response.data) {
-                    holidays = response.data;
+                if (response && response.data && !(holidays.length > 0)) {
+                    setHolidays(response.data);
                 }
             });
     }, []);
@@ -294,6 +294,11 @@ function Form() {
                 message: found.name
               });
               setShowWorkoutTimes(false);
+              let newObject = {...formValidators};
+              formValidators.workoutTime.required.valid = false;
+              setFormValidators(newObject);
+              setWorkoutTime('');
+
          } else {
               setInfoAboutEvent({
                 shouldDisplay: false,
@@ -313,7 +318,7 @@ function Form() {
         formData.append('age', age.toString());
         formData.append('photo', photo);
         formData.append('workoutDate', workoutDate);
-        formData.append('workoutTime', ""); // todo configure time
+        formData.append('workoutTime', workoutTime);
 
         axios.post('http://letsworkout.pl/submit', formData)
             .then(response => {
@@ -391,11 +396,7 @@ function Form() {
        let date = format(value.toDate(), 'yyyy-MM-dd');
        const found = holidays.find(holiday => holiday.date === date  && holiday.type === HolidayType.National_Holiday);
 
-       if (found) {
-           return true;
-       }
-
-       return false;
+       return !!found;
     }
 
     return (

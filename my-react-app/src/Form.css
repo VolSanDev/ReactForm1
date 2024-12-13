@@ -242,7 +242,9 @@ input[type="range"]::-moz-range-progress {
 }
 
 .timeDivMobile {
-    width: 17%;
+    min-width: 175px;
+    margin-right: 1rem;
+    margin-top: 0.5rem;
 }
 
 
@@ -252,6 +254,6 @@ input[type="range"]::-moz-range-progress {
 
 .timesSubContainerMobile {
     display: flex;
-    justify-content: space-between;
     flex-direction: row;
+    flex-wrap: wrap;
 }
